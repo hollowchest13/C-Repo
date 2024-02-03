@@ -1,1 +1,31 @@
+name: SonarCloud Analysis
+
+on:
+  push:
+    branches:
+      - main  # Змініть на вашу основну гілку
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1  # Змініть на вашу версію .NET Core
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build and analyze
+      run: |
+        dotnet build
+        dotnet sonarscanner begin /k:"hollowchest13_C-Repo" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+        dotnet build
+        dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
 
