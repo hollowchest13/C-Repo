@@ -37,10 +37,6 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-      - name: Clean and build
-        run: |
-          dotnet clean
-          dotnet build
       - name: Run SonarCloud analysis
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
@@ -48,4 +44,6 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"hollowchest13_C-Repo" /o:"hollowchest13" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+           dotnet clean
+           dotnet build
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
